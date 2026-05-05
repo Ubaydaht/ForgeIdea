@@ -248,7 +248,8 @@ const getAllIdeas = (req, res) => {
 const getSingleIdea = async (req, res) => {
     try {
         const idea = await Idea.findById(req.params.id)
-            .populate("createdBy");
+            .populate("createdBy")
+            .populate("comments.user");
 
         if (!idea) {
             return res.status(404).json({
@@ -348,17 +349,21 @@ const addComment = async (req, res) => {
 
         await idea.save();
 
-            // CREATE NOTIFICATION
-            if (idea.createdBy.toString() !== userId) {
+        // populate comment users
+        await idea.populate("comments.user");
 
-   await Notification.create({
-      recipient: idea.createdBy,
-      sender: userId,
-      idea: idea._id,
-      type: "comment",
-      message: "Someone commented on your idea"
-   });
-}
+        // CREATE NOTIFICATION
+        if (idea.createdBy.toString() !== userId) {
+
+            await Notification.create({
+                recipient: idea.createdBy,
+                sender: userId,
+                idea: idea._id,
+                type: "comment",
+                message: "Someone commented on your idea"
+            });
+        }
+
         res.status(200).json({
             message: "Comment added successfully",
             comments: idea.comments
@@ -369,7 +374,6 @@ const addComment = async (req, res) => {
         res.status(500).json({ message: err.message });
     }
 };
-
 
 const getNotifications = async (req, res) => {
    try {
