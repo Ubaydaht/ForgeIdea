@@ -14,6 +14,6 @@ router.put("/ideas/comment", addComment);
 router.get("/notifications/:userId", getNotifications);
 router.get("/board/:ideaId", getBoard);
 router.post("/board/tasks", addTask);
-router.get("/board/tasks/:ideaId", getTask);
+router.get("/tasks/:ideaId", getTask);
 
 module.exports = router;
