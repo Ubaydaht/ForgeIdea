@@ -468,20 +468,21 @@ const updateTaskStatus = async (req, res) => {
 };
 
 const searchIdeas = async (req, res) => {
-      try {
+try {
 
-    const { q } = req.query;
+    const q = req.query.q || "";
 
     const ideas = await Idea.find({
       $or: [
         { title: { $regex: q, $options: "i" } },
-        { category: { $regex: q, $options: "i" } }
+        { category: { $regex: q, $options: "i" } },
       ]
     }).populate("createdBy");
 
-    res.json(ideas);
+    res.json({ ideas });
 
   } catch (err) {
+    console.log(err);
     res.status(500).json({ message: err.message });
   }
 }
