@@ -467,4 +467,22 @@ const updateTaskStatus = async (req, res) => {
   }
 };
 
-module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus };
+const searchIdeas = async (req, res) => {
+      try {
+
+    const { q } = req.query;
+
+    const ideas = await Idea.find({
+      $or: [
+        { title: { $regex: q, $options: "i" } },
+        { category: { $regex: q, $options: "i" } }
+      ]
+    }).populate("createdBy");
+
+    res.json(ideas);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+}
+module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas };
