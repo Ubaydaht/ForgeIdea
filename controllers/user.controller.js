@@ -2,6 +2,7 @@ const Idea = require("../models/idea.model");
 const User = require("../models/user.model");
 const Notification = require("../models/notification.model");
 const Board = require("../models/board.model");
+const Task = require("../models/task.model");
 const bcrypt = require('bcryptjs')
 const nodemailer = require('nodemailer')
 const JWT = require('jsonwebtoken')
