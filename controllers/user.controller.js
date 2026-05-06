@@ -395,26 +395,45 @@ const getNotifications = async (req, res) => {
 
 const addTask = async (req, res) => {
 
-   try {
+    try {
 
-      const { boardId, columnIndex, title, description } = req.body;
+      const { idea, title, description } = req.body;
 
-      const board = await Board.findById(boardId);
-
-      board.columns[columnIndex].tasks.push({
+      const newTask = new Task({
+         idea,
          title,
-         description,
-         status: board.columns[columnIndex].title
+         description
       });
 
-      await board.save();
+      await newTask.save();
 
-      res.json(board);
+      res.status(201).json(newTask);
 
    } catch (error) {
 
-      res.status(500).json(error);
-   }
-};
+      res.status(500).json({
+         message: error.message
+      });
 
-module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask };
+   }
+
+};
+const getTask = async (req, res) => {
+      try {
+
+      const tasks = await Task.find({
+         idea: req.params.ideaId
+      });
+
+      res.json(tasks);
+
+   } catch (error) {
+
+      res.status(500).json({
+         message: error.message
+      });
+
+   }
+}
+
+module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask };
