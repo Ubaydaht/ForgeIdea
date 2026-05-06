@@ -449,4 +449,22 @@ const deleteTask = async (req, res) => {
   }
 };
 
-module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask };
+const updateTaskStatus = async (req, res) => {
+  try {
+
+    const { status } = req.body;
+
+    const updated = await Task.findByIdAndUpdate(
+      req.params.taskId,
+      { status },
+      { new: true }
+    );
+
+    res.json(updated);
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus };
