@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask} = require("../controllers/user.controller");
+const { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask} = require("../controllers/user.controller");
 
 router.post("/register", postSignup);
 router.post("/login", postSignin);
@@ -15,5 +15,6 @@ router.get("/notifications/:userId", getNotifications);
 router.get("/board/:ideaId", getBoard);
 router.post("/board/tasks", addTask);
 router.get("/tasks/:ideaId", getTask);
+router.delete("/tasks/:taskId", deleteTask);
 
 module.exports = router;

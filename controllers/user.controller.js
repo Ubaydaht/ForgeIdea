@@ -437,4 +437,16 @@ const getTask = async (req, res) => {
    }
 }
 
-module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask };
+const deleteTask = async (req, res) => {
+  try {
+
+    await Task.findByIdAndDelete(req.params.taskId);
+
+    res.json({ message: "Task deleted" });
+
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask };
