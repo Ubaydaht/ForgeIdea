@@ -10,6 +10,8 @@ const dotenv = require('dotenv');
 dotenv.config();
 const JWT_Secret = process.env.jwtSECRET
 
+const upload = require("../multer");
+
 
 const postSignup = (req, res) => {
 
@@ -486,4 +488,29 @@ try {
     res.status(500).json({ message: err.message });
   }
 }
-module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas };
+
+const uploadProfilePicture = async (req, res) => {
+     try {
+      const user = await User.findById(req.params.id);
+
+      if (!user) {
+        return res.status(404).json({
+          message: "User not found",
+        });
+      }
+
+      user.profilePicture = req.file.path;
+
+      await user.save();
+
+      res.status(200).json({
+        message: "Profile picture uploaded",
+        user,
+      });
+    } catch (error) {
+      res.status(500).json(error);
+    }
+}
+
+
+module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas, uploadProfilePicture };

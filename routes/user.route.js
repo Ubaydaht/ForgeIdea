@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas} = require("../controllers/user.controller");
+const { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas, uploadProfilePicture} = require("../controllers/user.controller");
 
 router.post("/register", postSignup);
 router.post("/login", postSignin);
@@ -18,5 +18,6 @@ router.get("/tasks/:ideaId", getTask);
 router.delete("/tasks/:taskId", deleteTask);
 router.put("/tasks/status/:taskId", updateTaskStatus);
 router.get("/ideas/search", searchIdeas);
+router.put("/upload-profile/:id", uploadProfilePicture)
 
 module.exports = router;
