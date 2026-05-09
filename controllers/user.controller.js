@@ -39,7 +39,7 @@ const postSignup = (req, res) => {
 
             // This is the information about the email you are sending
             let mailOptions = {
-                from: 'ubaidatolasunkanmi58@gmail.com',
+                from: 'IdeaForge Team',
                 to: [user.email],
                 subject: 'Hi, Welcome to IdeaForge',
                 html: 
@@ -512,5 +512,15 @@ const uploadProfilePicture = async (req, res) => {
     }
 }
 
+const getProfilePicture = async (req, res) => {
+     try {
+    const user = await User.findById(req.params.id);
 
-module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas, uploadProfilePicture };
+    res.status(200).json(user);
+
+  } catch (error) {
+    res.status(500).json(error);
+  }
+}
+
+module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas, uploadProfilePicture, getProfilePicture };
