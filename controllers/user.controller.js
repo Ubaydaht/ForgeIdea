@@ -39,8 +39,8 @@ const postSignup = (req, res) => {
 
             // This is the information about the email you are sending
             let mailOptions = {
-                from: 'IdeaForge Team',
-                to: [user.email],
+                from: 'ubaidatolasunkanmi58@gmail.com',
+                to: user.email,
                 subject: 'Hi, Welcome to IdeaForge',
                 html: 
                 `
