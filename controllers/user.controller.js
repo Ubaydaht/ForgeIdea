@@ -10,7 +10,7 @@ const dotenv = require('dotenv');
 dotenv.config();
 const JWT_Secret = process.env.jwtSECRET
 
-const upload = require("../multer");
+const upload = require("../middleware/upload");
 
 
 const postSignup = (req, res) => {
@@ -18,9 +18,23 @@ const postSignup = (req, res) => {
     let salt = bcrypt.genSaltSync(10);
     let hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
+
+   
+
   //  overwrite the plain  password with hashed  one
     req.body.password = hashedPassword
-    const user = req.body;
+    const imageUrl = req.file
+      ? `https://forgeidea-vp95.onrender.com/uploads/${req.file.filename}`
+      : "";
+
+    req.body.image = imageUrl;
+
+    const newUser = new User(req.body);
+
+
+    const user =  newUser.save();
+  
+
     
     const newPoster = new User(user);
 
@@ -523,4 +537,4 @@ const getProfilePicture = async (req, res) => {
   }
 }
 
-module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas, uploadProfilePicture, getProfilePicture };
+module.exports = { upload, postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas, uploadProfilePicture, getProfilePicture };

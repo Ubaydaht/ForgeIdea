@@ -10,6 +10,7 @@ const port = process.env.PORT
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
+app.use("/uploads", express.static("uploads"));
 mongoose.connect(URI)
 .then(()=>{
     console.log("Connected to mongodb");
