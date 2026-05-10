@@ -17,7 +17,7 @@ router.post("/board/tasks", addTask);
 router.get("/tasks/:ideaId", getTask);
 router.delete("/tasks/:taskId", deleteTask);
 router.put("/tasks/status/:taskId", updateTaskStatus);
-router.get("/ideas/search", searchIdeas);
+router.get("/search", searchIdeas);
 router.put("/upload-profile/:id", uploadProfilePicture)
 router.get("/users/:id", getProfilePicture)
 
