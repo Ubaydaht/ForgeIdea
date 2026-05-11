@@ -102,10 +102,11 @@ const postSignup = (req, res) => {
 }
 
 
+
 const postSignin = (req, res) => {
     const { email, password } = req.body;
 
-    User.findOne({ email })
+    User.findOne({ email }) // Corrected from Customer.findOne
         .then((foundUsers) => {
             if (!foundUsers) {
                 console.log("Invalid email");
@@ -146,14 +147,14 @@ const postSignin = (req, res) => {
 const getDashboard = (req, res) => {
     let token = req.headers.authorization.split(" ")[1]; // Assuming token is sent as "Bearer <token>"
     
-    JWT.verify(token, JWT_Secret, (err, decoded) => {
+    JWT.verify(token, JWT_Secret, (err, decoded) => { // Using the globally defined JWT_Secret
         if (err) {
             return res.status(401).json({ message: "Invalid or expired token" });
         } else {
             console.log("Decoded token data:", decoded);
             let userEmail = decoded.email;
             
-            Customer.findOne({ email: userEmail })
+            User.findOne({ email: userEmail }) // Corrected from Customer.findOne
                 .then((user) => {
                     if (!user) {
                         return res.status(404).json({ message: "User not found" });
@@ -534,4 +535,4 @@ const getProfilePicture = async (req, res) => {
   }
 }
 
-module.exports = { upload, postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas, uploadProfilePicture, getProfilePicture };
+module.exports = { postSignup, postSignin, getDashboard, postIdea, getAllIdeas, getSingleIdea, upvoteIdea, addComment, getNotifications, getBoard, addTask, getTask, deleteTask, updateTaskStatus, searchIdeas, uploadProfilePicture, getProfilePicture };
