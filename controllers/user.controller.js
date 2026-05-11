@@ -14,92 +14,70 @@ const upload = require("../middleware/upload");
 
 
 const postSignup = (req, res) => {
-    
-    let salt = bcrypt.genSaltSync(10);
-    let hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
+    try {
 
-   
+        let salt = bcrypt.genSaltSync(10);
+        let hashedPassword = bcrypt.hashSync(req.body.password, salt);
 
-  //  overwrite the plain  password with hashed  one
-    req.body.password = hashedPassword
-    const imageUrl = req.file
-      ? `https://forgeidea-vp95.onrender.com/uploads/${req.file.filename}`
-      : "";
+        req.body.password = hashedPassword;
 
-    req.body.image = imageUrl;
-     
+        const imageUrl =
+            req.file && req.file.filename
+                ? `https://forgeidea-vp95.onrender.com/uploads/${req.file.filename}`
+                : "";
 
-    const newPoster = new User(req.body);
+        req.body.image = imageUrl;
 
-    newPoster.save()
+        const newPoster = new User(req.body);
 
-    
-        .then((user) => {
-            console.log("User saved:", user);
-            let transporter = nodemailer.createTransport(
-                {
-                    service: 'gmail',
-                    auth:{
-                        user:'ubaidatolasunkanmi58@gmail.com',
-                        pass:'oxvm wydu frwa xlnf'
+        newPoster.save()
+            .then((user) => {
+
+                res.status(201).json({
+                    message: "sign up successful",
+                    user: {
+                        id: user._id,
+                        firstname: user.firstname,
+                        lastname: user.lastname,
+                        email: user.email,
+                        image: user.image
                     }
-                }
-            )
+                });
 
-            // This is the information about the email you are sending
-            let mailOptions = {
-                from: 'ubaidatolasunkanmi58@gmail.com',
-                to: user.email,
-                subject: 'Hi, Welcome to IdeaForge',
-                html: 
-                `
-                        <div style="background-color: #f4f4f4; padding: 0 0 10px; border-radius: 30px 30px 0 0  ;">
-                            <div style="padding-top: 20px; height: 100px; border-radius: 30px 30px 0 0 ; background: linear-gradient(-45deg, #af40ff 0%, #5b42f3 100% );">
-                                <h1 style="color:white; text-align: center;">Welcome to our Application</h1>
-                            </div>
-                            <div style="padding: 30px 0; text-align: center;">
-                                <p style="font-size: 18px;"><span style="font-weight: 600;">Congratulations!</span> Your sign-up was successful!</p>
-                                <p>Thank you for registering with us. We are excited to have you on board.</p>
-                                <div style="padding: 20px 0;">
-                                    <hr style="width: 50%;">
-                                    <p style="margin-bottom: 10px;">Best Regards</p>
-                                    <p style="color: #0f0f1e; margin-top: 0;">The IdeaForge Team(Ubaydah)</p>
-                                </div>
-                            </div>
-                        </div>
-                `
-                
-            };
-            // This is what will actually send the email
-            transporter.sendMail(mailOptions, function(error, info){
-            if (error) {
-                console.log(error);
-            } else {
-                console.log('Email sent: ' + info.response);
-            }
+                // EMAIL runs AFTER response (safe)
+                let transporter = nodemailer.createTransport({
+                    service: 'gmail',
+                    auth: {
+                        user: process.env.EMAIL,
+                        pass: process.env.PASS
+                    }
+                });
 
-            return res.status(201).json({
-            message: "sign up successful",
-            user: {
-                    id: user._id,
-                    firstname: user.firstname,
-                    lastname: user.lastname,
-                    email: user.email,
-                    image: user.image
+                let mailOptions = {
+                    from: process.env.EMAIL,
+                    to: user.email,
+                    subject: 'Hi, Welcome to IdeaForge',
+                    html: `<h1>Welcome</h1>`
+                };
 
-                }
-            })   
+                transporter.sendMail(mailOptions, (error, info) => {
+                    if (error) console.log("EMAIL ERROR:", error);
+                    else console.log("Email sent:", info.response);
+                });
+
+            })
+            .catch((err) => {
+                console.log("DB ERROR:", err);
+                return res.status(500).json({ message: err.message });
             });
-     
-          
-        })
-    
-        .catch((err) => {
-            console.error("Error saving to DB:", err);
-            res.status(500).send("Error: " + err.message);
-        });
-}
+
+    } catch (err) {
+        console.log("SERVER ERROR:", err);
+        return res.status(500).json({ message: err.message });
+    }
+
+};
 
 
 
