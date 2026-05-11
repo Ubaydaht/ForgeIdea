@@ -6,7 +6,7 @@ let userSchema = mongoose.Schema({
   lastname: {type: String, required: true},
   email: {type: String, required: true, unique:[true, "Email has been taken, please choose another one"]},
   password: {type: String, required: true},
-   image: {
+  image: {
     type: String, // stores file path or URL
     default: ""
   }

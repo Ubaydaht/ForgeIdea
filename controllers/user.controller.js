@@ -14,6 +14,8 @@ const upload = require("../middleware/upload");
 
 
 const postSignup = (req, res) => {
+     console.log(req.file);
+    console.log(req.body);
 
     let salt = bcrypt.genSaltSync(10);
     let hashedPassword = bcrypt.hashSync(req.body.password, salt);
@@ -28,17 +30,13 @@ const postSignup = (req, res) => {
       : "";
 
     req.body.image = imageUrl;
+     
 
-    const newUser = new User(req.body);
-
-
-    const user =  newUser.save();
-  
-
-    
-    const newPoster = new User(user);
+    const newPoster = new User(req.body);
 
     newPoster.save()
+
+    
         .then((user) => {
             console.log("User saved:", user);
             let transporter = nodemailer.createTransport(
