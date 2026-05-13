@@ -23,6 +23,7 @@ const postSignup = (req, res) => {
         req.body.password = hashedPassword;
 
         req.body.image = req.file ? req.file.path : "";
+        
 
         const newPoster = new User(req.body);
 
