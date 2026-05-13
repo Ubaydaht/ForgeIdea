@@ -22,12 +22,7 @@ const postSignup = (req, res) => {
 
         req.body.password = hashedPassword;
 
-        const imageUrl =
-            req.file && req.file.filename
-                ? `https://forgeidea-vp95.onrender.com/uploads/${req.file.filename}`
-                : "";
-
-        req.body.image = imageUrl;
+        req.body.image = req.file ? req.file.path : "";
 
         const newPoster = new User(req.body);
 
