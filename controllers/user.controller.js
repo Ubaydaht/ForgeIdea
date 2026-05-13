@@ -14,7 +14,7 @@ const upload = require("../middleware/upload");
 
 
 const postSignup = (req, res) => {
-
+    console.log(req.file);
     try {
 
         let salt = bcrypt.genSaltSync(10);
@@ -23,7 +23,7 @@ const postSignup = (req, res) => {
         req.body.password = hashedPassword;
 
         req.body.image = req.file ? req.file.path : "";
-        
+
 
         const newPoster = new User(req.body);
 
