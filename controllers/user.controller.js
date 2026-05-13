@@ -13,68 +13,68 @@ const JWT_Secret = process.env.jwtSECRET
 const upload = require("../middleware/upload");
 
 
-const postSignup = (req, res) => {
-    console.log(req.file);
+// 1. Move transporter OUTSIDE the controller to reuse the connection pool
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        user: process.env.EMAIL,
+        pass: process.env.PASS
+    }
+});
+
+const postSignup = async (req, res) => {
     try {
+        const { password, email } = req.body;
 
-        let salt = bcrypt.genSaltSync(10);
-        let hashedPassword = bcrypt.hashSync(req.body.password, salt);
+        // 2. Asynchronous hashing (non-blocking)
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password, salt);
 
-        req.body.password = hashedPassword;
+        // 3. Prepare user data
+        const userData = {
+            ...req.body,
+            password: hashedPassword,
+            image: req.file ? req.file.path : ""
+        };
 
-        req.body.image = req.file ? req.file.path : "";
+        const newPoster = new User(userData);
+        const savedUser = await newPoster.save();
 
+        // 4. Send response immediately
+        res.status(201).json({
+            message: "Sign up successful",
+            user: {
+                id: savedUser._id,
+                firstname: savedUser.firstname,
+                lastname: savedUser.lastname,
+                email: savedUser.email,
+                image: savedUser.image
+            }
+        });
 
-        const newPoster = new User(req.body);
+        // 5. Fire-and-forget email (won't delay the HTTP response)
+        const mailOptions = {
+            from: process.env.EMAIL,
+            to: savedUser.email,
+            subject: 'Hi, Welcome to IdeaForge',
+            html: `<h1>Welcome, ${savedUser.firstname}!</h1>`
+        };
 
-        newPoster.save()
-            .then((user) => {
-
-                res.status(201).json({
-                    message: "sign up successful",
-                    user: {
-                        id: user._id,
-                        firstname: user.firstname,
-                        lastname: user.lastname,
-                        email: user.email,
-                        image: user.image
-                    }
-                });
-
-                // EMAIL runs AFTER response (safe)
-                let transporter = nodemailer.createTransport({
-                    service: 'gmail',
-                    auth: {
-                        user: process.env.EMAIL,
-                        pass: process.env.PASS
-                    }
-                });
-
-                let mailOptions = {
-                    from: process.env.EMAIL,
-                    to: user.email,
-                    subject: 'Hi, Welcome to IdeaForge',
-                    html: `<h1>Welcome</h1>`
-                };
-
-                transporter.sendMail(mailOptions, (error, info) => {
-                    if (error) console.log("EMAIL ERROR:", error);
-                    else console.log("Email sent:", info.response);
-                });
-
-            })
-            .catch((err) => {
-                console.log("DB ERROR:", err);
-                return res.status(500).json({ message: err.message });
-            });
+        transporter.sendMail(mailOptions).catch(err => 
+            console.error("NON-FATAL EMAIL ERROR:", err)
+        );
 
     } catch (err) {
-        console.log("SERVER ERROR:", err);
-        return res.status(500).json({ message: err.message });
+        console.error("SIGNUP ERROR:", err);
+        
+        // Handle Mongoose duplicate key error (e.g., email already exists)
+        if (err.code === 11000) {
+            return res.status(400).json({ message: "Email already exists." });
+        }
+
+        return res.status(500).json({ message: "Internal server error" });
     }
-
 };
-
 
 
 const postSignin = (req, res) => {
