@@ -54,7 +54,7 @@ const postSignup = (req, res) => {
                     subject: `Hi ${user.firstname},`,
                     html: ` <div style="background-color: #f4f4f4; padding: 0 0 10px; border-radius: 30px 30px 0 0  ;">
                             <div style="padding-top: 20px; height: 100px; border-radius: 30px 30px 0 0 ; background: linear-gradient(-45deg, #003D9B 0%, #013c958c 100% );">
-                                <h1 style="color:white; text-align: center;">Welcome to IdeaForge!</h1>
+                                <h1 style=" color: #ffffff; text-align: center;">Welcome to IdeaForge!</h1>
                             </div>
                             <div style="padding: 30px 0; text-align: center;">
                                 <p style="font-size: 18px;"><span style="font-weight: 600;">Congratulations!</span> Your sign-up was successful!</p>
@@ -62,7 +62,7 @@ const postSignup = (req, res) => {
                                 <div style="padding: 20px 0;">
                                     <hr style="width: 50%;">
                                     <p style="margin-bottom: 10px;">Best Regards</p>
-                                    <p style="color: #68FADD; margin-top: 0;">Ubaydah, Team IdeaForge</p>
+                                    <p style="color: #2B7DA3; margin-top: 0;">Ubaydah, Team IdeaForge</p>
                                 </div>
                             </div>
                         </div>`
