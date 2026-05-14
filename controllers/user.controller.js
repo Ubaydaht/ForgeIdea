@@ -125,6 +125,7 @@ const postSignin = (req, res) => {
                     id: foundUsers._id,
                     email: foundUsers.email,
                     firstname: foundUsers.firstname,
+                    lastname: foundUsers.lastname,
                     image:foundUsers.image,
                     token: token
                 }
