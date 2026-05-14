@@ -62,13 +62,21 @@ const postSignup = (req, res) => {
 
             })
             .catch((err) => {
-                console.log("DB ERROR:", err);
-                return res.status(500).json({ message: err.message });
+                 console.log(error);
+
+   res.status(500).json({
+      message: error.message,
+      error
+   });
             });
 
     } catch (err) {
-        console.log("SERVER ERROR:", err);
-        return res.status(500).json({ message: err.message });
+         console.log(error);
+
+   res.status(500).json({
+      message: error.message,
+      error
+   });
     }
 
 };
