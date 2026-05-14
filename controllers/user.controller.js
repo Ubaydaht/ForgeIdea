@@ -49,7 +49,7 @@ const postSignup = (req, res) => {
                 });
 
                 let mailOptions = {
-                    from: process.env.EMAIL,
+                    from:  `"IdeaForge" <${process.env.EMAIL}>`,
                     to: user.email,
                     subject: 'Hi, Welcome to IdeaForge',
                     html: `<h1>Welcome</h1>`
