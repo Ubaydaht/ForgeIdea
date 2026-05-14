@@ -10,8 +10,6 @@ const dotenv = require('dotenv');
 dotenv.config();
 const JWT_Secret = process.env.jwtSECRET
 
-const upload = require("../middleware/upload");
-
 
 const postSignup = (req, res) => {
     console.log(req.file);

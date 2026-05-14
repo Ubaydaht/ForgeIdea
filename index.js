@@ -7,13 +7,13 @@ const dotenv = require("dotenv")
 dotenv.config()
 const URI = process.env.MONGODB_URI;
 const port = process.env.PORT
-const path = require("path");
+
 
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 mongoose.connect(URI)
 .then(()=>{
     console.log("Connected to mongodb");
