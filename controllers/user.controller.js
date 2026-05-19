@@ -315,7 +315,7 @@ const upvoteIdea = async (req, res) => {
                     sender: userId,
                     idea: idea._id,
                     type: "upvote",
-                    message: "Someone upvoted your idea"
+                    message: "upvoted your idea"
                 });
             }
         }
@@ -370,7 +370,7 @@ const addComment = async (req, res) => {
                 sender: userId,
                 idea: idea._id,
                 type: "comment",
-                message: "Someone commented on your idea"
+                message: "commented on your idea"
             });
         }
 
